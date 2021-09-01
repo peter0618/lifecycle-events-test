@@ -60,16 +60,23 @@ export class DogService
 
   async beforeApplicationShutdown(signal?: string) {
     this.logger.debug(`beforeApplicationShutdown(signal: ${signal})`);
+    // function sleep(ms) {
+    //   return new Promise((r) => setTimeout(r, ms));
+    // }
+    // while (!this.isFinished) {
+    //   await sleep(2000);
+    //   this.isFinished = true;
+    // }
+  }
+
+  async onApplicationShutdown(signal?: string) {
+    this.logger.debug(`onApplicationShutdown(signal: ${signal})`);
     function sleep(ms) {
       return new Promise((r) => setTimeout(r, ms));
     }
     while (!this.isFinished) {
-      await sleep(2000);
+      await sleep(5000);
       this.isFinished = true;
     }
-  }
-
-  onApplicationShutdown(signal?: string): any {
-    this.logger.debug(`onApplicationShutdown(signal: ${signal})`);
   }
 }

@@ -9,13 +9,23 @@ import {
   OnModuleInit,
   Logger,
   OnApplicationBootstrap,
+  OnModuleDestroy,
+  BeforeApplicationShutdown,
+  OnApplicationShutdown,
 } from '@nestjs/common';
 import { CatService } from './cat.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 
 @Controller('cat')
-export class CatController implements OnModuleInit, OnApplicationBootstrap {
+export class CatController
+  implements
+    OnModuleInit,
+    OnApplicationBootstrap,
+    OnModuleDestroy,
+    BeforeApplicationShutdown,
+    OnApplicationShutdown
+{
   private readonly logger = new Logger(this.constructor.name);
   constructor(private readonly catService: CatService) {}
 
@@ -50,5 +60,17 @@ export class CatController implements OnModuleInit, OnApplicationBootstrap {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.catService.remove(+id);
+  }
+
+  onModuleDestroy(): any {
+    this.logger.debug(`onModuleDestroy()`);
+  }
+
+  beforeApplicationShutdown(signal?: string): any {
+    this.logger.debug(`beforeApplicationShutdown(signal: ${signal})`);
+  }
+
+  onApplicationShutdown(signal?: string): any {
+    this.logger.debug(`onApplicationShutdown(signal: ${signal})`);
   }
 }
